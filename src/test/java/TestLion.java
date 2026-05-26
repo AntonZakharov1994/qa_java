@@ -26,30 +26,35 @@ public class TestLion {
     public ExpectedException exceptionRule = ExpectedException.none();
 
     @Test
-    public void getKittens() throws Exception {
-        // Настраиваем мок: задаём ожидаемое количество котят
+    public void getKittens_forMaleLion_returnsCorrectCount() throws Exception {
         Mockito.when(feline.getKittens()).thenReturn(3);
-
-        // Создаём льва-самца и проверяем количество котят
         Lion maleLion = new Lion(MALE, feline);
         assertEquals(3, maleLion.getKittens());
-        assertTrue(maleLion.doesHaveMane()); // Самцы имеют гриву
+    }
 
-        // Создаём львицу и проверяем количество котят
+    @Test
+    public void doesHaveMane_forMaleLion_returnsTrue() throws Exception {
+
+        Lion maleLion = new Lion(MALE, feline);
+        assertTrue(maleLion.doesHaveMane());
+    }
+
+    @Test
+    public void getKittens_forFemaleLion_returnsCorrectCount() throws Exception {
+        Mockito.when(feline.getKittens()).thenReturn(3);
         Lion femaleLion = new Lion(FEMALE, feline);
         assertEquals(3, femaleLion.getKittens());
-        assertFalse(femaleLion.doesHaveMane()); // Самки не имеют гривы
     }
 
     @Test
-    public void doesHaveMane() throws Exception {
-        Lion lion = new Lion(MALE, feline);
-        boolean actual = lion.doesHaveMane();
-        assertTrue(actual);
+    public void doesHaveMane_forFemaleLion_returnsFalse() throws Exception {
+
+        Lion femaleLion = new Lion(FEMALE, feline);
+        assertFalse(femaleLion.doesHaveMane());
     }
 
     @Test
-    public void getFood() throws Exception {
+    public void getFood_returnsCorrectDiet() throws Exception {
         Lion lion = new Lion(MALE, feline);
         Mockito.when(feline.getFood("Хищник")).thenReturn(List.of("Животные", "Птицы", "Рыба"));
         List<String> actual = lion.getFood();
@@ -58,9 +63,10 @@ public class TestLion {
     }
 
     @Test
-    public void checkExceptionByCreateLionWithInvalidGender() throws Exception {
+    public void checkExceptionByCreateLionWithInvalidGender_throwsException() throws Exception {
         exceptionRule.expect(Exception.class);
         exceptionRule.expectMessage(exceptionMessage);
         new Lion("НекорректныйПол", feline);
     }
 }
+
